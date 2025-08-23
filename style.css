@@ -142,7 +142,6 @@ td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #dddfe2;
-    white-space: nowrap;
 }
 
 th {
@@ -220,9 +219,7 @@ p {
     color: #606770;
 }
 
-#summary-table .balance {
-    white-space: nowrap;
-}
+
 
 #dynamic-sections-container h2 input {
     font-size: 1em;

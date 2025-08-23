@@ -235,3 +235,9 @@ p {
     margin-left: 10px;
     vertical-align: middle;
 }
+
+/* 総合収支テーブルのテキスト折り返し設定 */
+#summary-table th,
+#summary-table td {
+    word-break: break-all;
+}

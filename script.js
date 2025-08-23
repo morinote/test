@@ -9,12 +9,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function adjustInputWidth(inputElement) {
     if (!inputElement) return;
-    const minWidth = 40;
-    const placeholder = inputElement.placeholder || '';
-    const value = inputElement.value || '';
-    const text = value.length > 0 ? value : placeholder;
-    const width = Math.max(minWidth, (text.length * 9) + 24);
-    inputElement.style.width = `${width}px`;
+    const value = inputElement.value || inputElement.placeholder || '';
+    // 1ch is the width of the '0' character.
+    // Add 2ch for a bit of padding.
+    const newWidth = `calc(${value.length}ch + 2ch)`;
+    inputElement.style.width = newWidth;
   }
 
   function adjustAllInputWidths() {

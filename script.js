@@ -1,31 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
   const participants = [
-    "おおたけ",
-    "なぎさ",
-    "ひとし",
-    "たけだ",
-    "おさない",
-    "だいすけ",
-    "かず",
-    "まえさき",
-    "のぞみ",
-    "みかこ",
-    "たつや",
-    "はると",
-    "キム",
-    "めい",
-    "しずか",
-    "しょうま",
-    "みう",
-    "けんせい",
-    "よっしー",
-    "きょうか",
+    "おおたけ", "なぎさ", "ひとし", "たけだ", "おさない", "だいすけ", "かず", "まえさき", "のぞみ", "みかこ",
+    "たつや", "はると", "キム", "めい", "しずか", "しょうま", "みう", "けんせい", "よっしー", "きょうか",
   ];
 
   let participantInputValues = {};
   let ticketPrices = {};
 
+  function adjustInputWidth(inputElement) {
+    if (!inputElement) return;
+    const minWidth = 40;
+    const placeholder = inputElement.placeholder || '';
+    const value = inputElement.value || '';
+    const text = value.length > 0 ? value : placeholder;
+    const width = Math.max(minWidth, (text.length * 9) + 24);
+    inputElement.style.width = `${width}px`;
+  }
+
+  function adjustAllInputWidths() {
+    document.querySelectorAll('input[type="number"], input[type="text"]').forEach(adjustInputWidth);
+  }
+
   function formatNumberWithCommas(number) {
+    if (number === undefined || number === null || isNaN(number)) {
+        return "0"; 
+    }
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
@@ -50,15 +49,15 @@ document.addEventListener("DOMContentLoaded", () => {
             <tbody>
                 <tr>
                     <td>通し券</td>
-                    <td><input type="number" class="ticket-price" data-ticket-type="通し券"></td>
+                    <td><input type="number" class="ticket-price" data-ticket-type="通し券" placeholder="0"></td>
                 </tr>
                 <tr>
                     <td>テント券</td>
-                    <td><input type="number" class="ticket-price" data-ticket-type="テント券"></td>
+                    <td><input type="number" class="ticket-price" data-ticket-type="テント券" placeholder="0"></td>
                 </tr>
                 <tr>
                     <td>駐車券</td>
-                    <td><input type="number" class="ticket-price" data-ticket-type="駐車券"></td>
+                    <td><input type="number" class="ticket-price" data-ticket-type="駐車券" placeholder="0"></td>
                 </tr>
             </tbody>
         </table>
@@ -80,7 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 </tr>
             </thead>
             <tbody>
-                <!-- Participant payment status will be loaded here by JavaScript -->
             </tbody>
             <tfoot>
                 <tr>
@@ -107,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 </tr>
             </thead>
             <tbody>
-                <!-- Beer server payments will be loaded here by JavaScript -->
             </tbody>
         </table>
         `;
@@ -126,7 +123,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 </tr>
             </thead>
             <tbody>
-                <!-- Food payments will be loaded here by JavaScript -->
             </tbody>
         </table>
         `;
@@ -156,8 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
           parseInt(input.value) || 0;
       });
     localStorage.setItem("ticketPrices", JSON.stringify(currentTicketPrices));
-
-    
   }
 
   function loadData() {
@@ -212,8 +206,6 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
     }
-
-    
   }
 
   function renderParticipants() {
@@ -292,7 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
             newRow.dataset.participant = participant;
             newRow.innerHTML = `
                             <td>${participant}</td>
-                            <td><input type="number" class="item-cost-input"></td>
+                            <td><input type="number" class="item-cost-input" placeholder="0"></td>
                             <td class="total-payment">0</td>
                             <td class="per-person-payment">0</td>
                             <td class="balance">0</td>
@@ -303,6 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     updateTables();
+    adjustAllInputWidths();
   }
 
   document.addEventListener("click", (event) => {
@@ -342,7 +335,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document
       .getElementById("food-participants-list")
       .addEventListener("change", updateTables);
-    
   }
 
   function updateTables() {
@@ -352,136 +344,127 @@ document.addEventListener("DOMContentLoaded", () => {
       )
     ).map((checkbox) => checkbox.value);
 
-    participants.forEach((p) => {
-      if (participantInputValues[p]) {
-        participantInputValues[p]["mainチェック"] =
-          selectedParticipants.includes(p);
-      }
-    });
-
-    updateParticipantCount("ticket", selectedParticipants.length);
-
     const selectedBeerServerParticipants = Array.from(
       document.querySelectorAll(
         '#beer-server-participants-list input[type="checkbox"]:checked'
       )
     ).map((checkbox) => checkbox.value);
-    updateParticipantCount(
-      "beer-server",
-      selectedBeerServerParticipants.length
-    );
-
-    participants.forEach((p) => {
-      if (participantInputValues[p]) {
-        participantInputValues[p]["ビアサーバーチェック"] =
-          selectedBeerServerParticipants.includes(p);
-      }
-    });
 
     const selectedFoodParticipants = Array.from(
       document.querySelectorAll(
         '#food-participants-list input[type="checkbox"]:checked'
       )
     ).map((checkbox) => checkbox.value);
-    updateParticipantCount("food", selectedFoodParticipants.length);
 
     participants.forEach((p) => {
       if (participantInputValues[p]) {
-        participantInputValues[p]["食材チェック"] =
-          selectedFoodParticipants.includes(p);
+        participantInputValues[p]["mainチェック"] = selectedParticipants.includes(p);
+        participantInputValues[p]["ビアサーバーチェック"] = selectedBeerServerParticipants.includes(p);
+        participantInputValues[p]["食材チェック"] = selectedFoodParticipants.includes(p);
       }
     });
 
-    const paymentStatusTableBody = document.querySelector(
-      "#calculation-table tbody"
+    updateParticipantCount("ticket", selectedParticipants.length);
+    updateParticipantCount("beer-server", selectedBeerServerParticipants.length);
+    updateParticipantCount("food", selectedFoodParticipants.length);
+
+    const paymentStatusTableBody = document.querySelector("#calculation-table tbody");
+    const beerServerTableBody = document.querySelector("#beer-server-calculation-table tbody");
+    const foodTableBody = document.querySelector("#food-calculation-table tbody");
+
+    const updateAndSortTable = (tbody, selected, rowHTML, valueSetter) => {
+        const existingRows = new Map();
+        tbody.querySelectorAll("tr").forEach(row => {
+            existingRows.set(row.dataset.participant, row);
+        });
+
+        selected.forEach(participant => {
+            let row = existingRows.get(participant);
+            if (!row) {
+                row = tbody.insertRow();
+                row.dataset.participant = participant;
+                row.innerHTML = rowHTML(participant);
+                existingRows.set(participant, row);
+            }
+            row.style.display = "";
+        });
+
+        existingRows.forEach((row, participant) => {
+            if (!selected.includes(participant)) {
+                row.style.display = "none";
+            }
+        });
+
+        participants.forEach(participant => {
+            const row = existingRows.get(participant);
+            if (row && selected.includes(participant)) {
+                tbody.appendChild(row);
+            }
+        });
+        
+        selected.forEach(participant => {
+            const row = existingRows.get(participant);
+            if(row) valueSetter(row, participant);
+        });
+    };
+
+    updateAndSortTable(
+        paymentStatusTableBody,
+        selectedParticipants,
+        (p) => `
+            <td>${p}</td>
+            <td><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="テント券" placeholder="0"></td>
+            <td><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="駐車券" placeholder="0"></td>
+            <td><input type="number" class="fee-input" data-participant="${p}" placeholder="0"></td>
+            <td class="total-payment">0</td>
+            <td class="per-person-payment">0</td>
+            <td class="balance">0</td>
+        `,
+        (row, p) => {
+            row.querySelector('.ticket-quantity-input[data-ticket-type="テント券"]').value = participantInputValues[p]["テント券"];
+            row.querySelector('.ticket-quantity-input[data-ticket-type="駐車券"]').value = participantInputValues[p]["駐車券"];
+            row.querySelector(".fee-input").value = participantInputValues[p]["手数料"];
+        }
     );
-    const beerServerTableBody = document.querySelector(
-      "#beer-server-calculation-table tbody"
+
+    updateAndSortTable(
+        beerServerTableBody,
+        selectedBeerServerParticipants,
+        (p) => `
+            <td>${p}</td>
+            <td><input type="number" class="beer-server-input" data-participant="${p}" placeholder="0"></td>
+            <td class="total-payment">0</td>
+            <td class="per-person-payment">0</td>
+            <td class="balance">0</td>
+        `,
+        (row, p) => {
+            row.querySelector(".beer-server-input").value = participantInputValues[p]["ビアサーバー"];
+        }
     );
-    const foodTableBody = document.querySelector(
-      "#food-calculation-table tbody"
+
+    updateAndSortTable(
+        foodTableBody,
+        selectedFoodParticipants,
+        (p) => `
+            <td>${p}</td>
+            <td><input type="number" class="food-input" data-participant="${p}" placeholder="0"></td>
+            <td class="total-payment">0</td>
+            <td class="per-person-payment">0</td>
+            <td class="balance">0</td>
+        `,
+        (row, p) => {
+            row.querySelector(".food-input").value = participantInputValues[p]["食材"];
+        }
     );
-
-    Array.from(paymentStatusTableBody.rows).forEach((row) => {
-      if (!selectedParticipants.includes(row.cells[0].textContent))
-        row.remove();
-    });
-    Array.from(beerServerTableBody.rows).forEach((row) => {
-      if (!selectedBeerServerParticipants.includes(row.cells[0].textContent))
-        row.remove();
-    });
-    Array.from(foodTableBody.rows).forEach((row) => {
-      if (!selectedFoodParticipants.includes(row.cells[0].textContent))
-        row.remove();
-    });
-
-    selectedParticipants.forEach((participant) => {
-      let paymentRow = Array.from(paymentStatusTableBody.rows).find(
-        (r) => r.cells[0].textContent === participant
-      );
-      if (!paymentRow) {
-        paymentRow = paymentStatusTableBody.insertRow();
-        paymentRow.innerHTML = `
-                    <td>${participant}</td>
-                    <td><input type="number" class="ticket-quantity-input" data-participant="${participant}" data-ticket-type="テント券"></td>
-                    <td><input type="number" class="ticket-quantity-input" data-participant="${participant}" data-ticket-type="駐車券"></td>
-                    <td><input type="number" class="fee-input" data-participant="${participant}"></td>
-                    <td class="total-payment">0</td>
-                    <td class="per-person-payment">0</td>
-                    <td class="balance">0</td>
-                `;
-      }
-      paymentRow.querySelector(
-        '.ticket-quantity-input[data-ticket-type="テント券"]'
-      ).value = participantInputValues[participant]["テント券"];
-      paymentRow.querySelector(
-        '.ticket-quantity-input[data-ticket-type="駐車券"]'
-      ).value = participantInputValues[participant]["駐車券"];
-      paymentRow.querySelector(".fee-input").value =
-        participantInputValues[participant]["手数料"];
-    });
-
-    selectedBeerServerParticipants.forEach((participant) => {
-      let beerServerRow = Array.from(beerServerTableBody.rows).find(
-        (r) => r.cells[0].textContent === participant
-      );
-      if (!beerServerRow) {
-        beerServerRow = beerServerTableBody.insertRow();
-        beerServerRow.innerHTML = `
-                    <td>${participant}</td>
-                    <td><input type="number" class="beer-server-input" data-participant="${participant}"></td>
-                    <td class="total-payment">0</td>
-                    <td class="per-person-payment">0</td>
-                    <td class="balance">0</td>
-                `;
-      }
-      beerServerRow.querySelector(".beer-server-input").value =
-        participantInputValues[participant]["ビアサーバー"];
-    });
-
-    selectedFoodParticipants.forEach((participant) => {
-      let foodRow = Array.from(foodTableBody.rows).find(
-        (r) => r.cells[0].textContent === participant
-      );
-      if (!foodRow) {
-        foodRow = foodTableBody.insertRow();
-        foodRow.innerHTML = `
-                    <td>${participant}</td>
-                    <td><input type="number" class="food-input" data-participant="${participant}"></td>
-                    <td class="total-payment">0</td>
-                    <td class="per-person-payment">0</td>
-                    <td class="balance">0</td>
-                `;
-      }
-      foodRow.querySelector(".food-input").value =
-        participantInputValues[participant]["食材"];
-    });
 
     document
       .querySelectorAll(
         ".ticket-quantity-input, .fee-input, .beer-server-input, .food-input"
       )
       .forEach((input) => {
+        if (input.dataset.listenerAttached) return;
+        input.dataset.listenerAttached = true;
+
         input.addEventListener("input", (event) => {
           const participant = event.target.dataset.participant;
           const type =
@@ -527,8 +510,6 @@ document.addEventListener("DOMContentLoaded", () => {
           parseInt(input.value) || 0;
       });
 
-    
-
     const participantData = {};
     const allActiveParticipants = new Set([
       ...selectedParticipants,
@@ -546,7 +527,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.querySelectorAll("#calculation-table tbody tr").forEach((row) => {
-      const participant = row.cells[0].textContent;
+      const participant = row.dataset.participant;
       if (participantData[participant]) {
         participantData[participant]["テント券"] =
           parseInt(
@@ -568,7 +549,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document
       .querySelectorAll("#beer-server-calculation-table tbody tr")
       .forEach((row) => {
-        const participant = row.cells[0].textContent;
+        const participant = row.dataset.participant;
         if (
           selectedBeerServerParticipants.includes(participant) &&
           participantData[participant]
@@ -581,7 +562,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document
       .querySelectorAll("#food-calculation-table tbody tr")
       .forEach((row) => {
-        const participant = row.cells[0].textContent;
+        const participant = row.dataset.participant;
         if (
           selectedFoodParticipants.includes(participant) &&
           participantData[participant]
@@ -616,8 +597,20 @@ document.addEventListener("DOMContentLoaded", () => {
       totalFoodExpense = 0;
     const calculationResults = {};
 
+    const allParticipantsInTables = new Set([...selectedParticipants, ...selectedBeerServerParticipants, ...selectedFoodParticipants]);
+
+    allParticipantsInTables.forEach(p => {
+        calculationResults[p] = {
+            totalPayment: 0,
+            beerServerPayment: 0,
+            foodPayment: 0,
+            balance: 0,
+            beerBalance: 0,
+            foodBalance: 0
+        };
+    });
+
     selectedParticipants.forEach((p) => {
-      calculationResults[p] = {};
       const tentVal = participantData[p]["テント券"],
         parkingVal = participantData[p]["駐車券"],
         fee = participantData[p]["手数料"];
@@ -625,22 +618,20 @@ document.addEventListener("DOMContentLoaded", () => {
       totalParkingTickets += parkingVal;
       totalCommission += fee;
       const totalPayment =
-        tentVal * currentTicketPrices["テント券"] +
-        parkingVal * currentTicketPrices["駐車券"] +
+        (tentVal * currentTicketPrices["テント券"]) +
+        (parkingVal * currentTicketPrices["駐車券"]) +
         fee;
       calculationResults[p].totalPayment = totalPayment;
       totalExpense += totalPayment;
     });
 
     selectedBeerServerParticipants.forEach((p) => {
-      if (!calculationResults[p]) calculationResults[p] = {};
       const beerServerCost = participantData[p]["ビアサーバー"];
       calculationResults[p].beerServerPayment = beerServerCost;
       totalBeerServerExpense += beerServerCost;
     });
 
     selectedFoodParticipants.forEach((p) => {
-      if (!calculationResults[p]) calculationResults[p] = {};
       const foodCost = participantData[p]["食材"];
       calculationResults[p].foodPayment = foodCost;
       totalFoodExpense += foodCost;
@@ -693,7 +684,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } = results;
 
     document.querySelectorAll("#calculation-table tbody tr").forEach((row) => {
-      const p = row.cells[0].textContent;
+      const p = row.dataset.participant;
       if (calculationResults[p]) {
         const res = calculationResults[p];
         row.querySelector(".total-payment").textContent =
@@ -721,7 +712,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document
       .querySelectorAll("#beer-server-calculation-table tbody tr")
       .forEach((row) => {
-        const p = row.cells[0].textContent;
+        const p = row.dataset.participant;
         if (
           calculationResults[p] &&
           calculationResults[p].beerBalance !== undefined
@@ -752,7 +743,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document
       .querySelectorAll("#food-calculation-table tbody tr")
       .forEach((row) => {
-        const p = row.cells[0].textContent;
+        const p = row.dataset.participant;
         if (
           calculationResults[p] &&
           calculationResults[p].foodBalance !== undefined
@@ -791,6 +782,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const results = performCalculations(inputs);
     updateUIWithResults(results);
     updateSummaryTable();
+    adjustAllInputWidths();
   }
 
   function calculateDynamicTable(table) {
@@ -837,7 +829,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const calculationSectionTitle = document.querySelector(
       "#calculation-section h2"
     ).textContent;
-    const calculationHeader = calculationSectionTitle + "料金";
     const headers = ["参加者", calculationSectionTitle, "ビアサーバー", "食材"];
     document.querySelectorAll(".dynamic-table").forEach((table) => {
       headers.push(table.closest("section").querySelector("h2").textContent);
@@ -865,7 +856,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     document.querySelectorAll("#calculation-table tbody tr").forEach((row) => {
-      const p = row.cells[0].textContent;
+      const p = row.dataset.participant;
       if (summary[p])
         summary[p][calculationSectionTitle] = parseBalance(
           row.querySelector(".balance").textContent
@@ -874,7 +865,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document
       .querySelectorAll("#beer-server-calculation-table tbody tr")
       .forEach((row) => {
-        const p = row.cells[0].textContent;
+        const p = row.dataset.participant;
         if (summary[p])
           summary[p]["ビアサーバー"] = parseBalance(
             row.querySelector(".balance").textContent
@@ -883,7 +874,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document
       .querySelectorAll("#food-calculation-table tbody tr")
       .forEach((row) => {
-        const p = row.cells[0].textContent;
+        const p = row.dataset.participant;
         if (summary[p])
           summary[p]["食材"] = parseBalance(
             row.querySelector(".balance").textContent
@@ -892,7 +883,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".dynamic-table").forEach((table) => {
       const title = table.closest("section").querySelector("h2").textContent;
       table.querySelectorAll("tbody tr").forEach((row) => {
-        const p = row.cells[0].textContent;
+        const p = row.dataset.participant;
         if (summary[p])
           summary[p][title] = parseBalance(
             row.querySelector(".balance").textContent
@@ -900,47 +891,47 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    const activeParticipants = new Set();
-    document
-      .querySelectorAll(
-        "#calculation-table tbody tr, #beer-server-calculation-table tbody tr, #food-calculation-table tbody tr, .dynamic-table tbody tr"
-      )
-      .forEach((row) => {
-        activeParticipants.add(row.cells[0].textContent);
-      });
+    const allActiveParticipants = new Set();
+    document.querySelectorAll("tbody tr").forEach(row => {
+        if(row.style.display !== 'none' && row.dataset.participant) {
+            allActiveParticipants.add(row.dataset.participant);
+        }
+    });
 
     summaryTbody.innerHTML = "";
-    activeParticipants.forEach((participant) => {
-      const row = summaryTbody.insertRow();
-      let finalBalance = 0;
-      let cellHtml = `<td>${participant}</td>`;
-      headers.forEach((header) => {
-        if (header !== "参加者" && header !== "最終収支") {
-          const balance = summary[participant][header] || 0;
-          finalBalance += balance;
-          const balanceText =
-            balance > 0
-              ? `貰う: ${formatNumberWithCommas(balance)}`
-              : balance < 0
-              ? `払う: ${formatNumberWithCommas(Math.abs(balance))}`
-              : "0";
-          cellHtml += `<td class="balance"${
-            balance > 0 ? ' data-sign="+"' : ""
-          }>${balanceText}</td>`;
-        }
-      });
-      const roundedFinalBalance =
-        Math.sign(finalBalance) * Math.ceil(Math.abs(finalBalance) / 100) * 100;
-      const finalBalanceText =
-        roundedFinalBalance > 0
-          ? `貰う: ${formatNumberWithCommas(roundedFinalBalance)}`
-          : roundedFinalBalance < 0
-          ? `払う: ${formatNumberWithCommas(Math.abs(roundedFinalBalance))}`
-          : "0";
-      cellHtml += `<td class="balance"${
-        roundedFinalBalance > 0 ? ' data-sign="+"' : ""
-      }>${finalBalanceText}</td>`;
-      row.innerHTML = cellHtml;
+    participants.forEach((participant) => {
+        if(!allActiveParticipants.has(participant)) return;
+
+        const row = summaryTbody.insertRow();
+        let finalBalance = 0;
+        let cellHtml = `<td>${participant}</td>`;
+        headers.forEach((header) => {
+            if (header !== "参加者" && header !== "最終収支") {
+            const balance = summary[participant][header] || 0;
+            finalBalance += balance;
+            const balanceText =
+                balance > 0
+                ? `貰う: ${formatNumberWithCommas(balance)}`
+                : balance < 0
+                ? `払う: ${formatNumberWithCommas(Math.abs(balance))}`
+                : "0";
+            cellHtml += `<td class="balance"${
+                balance > 0 ? ' data-sign="+"' : ""
+            }>${balanceText}</td>`;
+            }
+        });
+        const roundedFinalBalance =
+            Math.sign(finalBalance) * Math.ceil(Math.abs(finalBalance) / 100) * 100;
+        const finalBalanceText =
+            roundedFinalBalance > 0
+            ? `貰う: ${formatNumberWithCommas(roundedFinalBalance)}`
+            : roundedFinalBalance < 0
+            ? `払う: ${formatNumberWithCommas(Math.abs(roundedFinalBalance))}`
+            : "0";
+        cellHtml += `<td class="balance"${
+            roundedFinalBalance > 0 ? ' data-sign="+"' : ""
+        }>${finalBalanceText}</td>`;
+        row.innerHTML = cellHtml;
     });
   }
 
@@ -1002,7 +993,7 @@ document.addEventListener("DOMContentLoaded", () => {
             newRow.dataset.participant = participant;
             newRow.innerHTML = `
                     <td>${participant}</td>
-                    <td><input type="number" class="item-cost-input"></td>
+                    <td><input type="number" class="item-cost-input" placeholder="0"></td>
                     <td class="total-payment">0</td>
                     <td class="per-person-payment">0</td>
                     <td class="balance">0</td>
@@ -1023,7 +1014,7 @@ document.addEventListener("DOMContentLoaded", () => {
               newRow.dataset.participant = participant;
               newRow.innerHTML = `
                         <td>${participant}</td>
-                        <td><input type="number" class="item-cost-input"></td>
+                        <td><input type="number" class="item-cost-input" placeholder="0"></td>
                         <td class="total-payment">0</td>
                         <td class="per-person-payment">0</td>
                         <td class="balance">0</td>
@@ -1047,6 +1038,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (event.target.classList.contains("item-cost-input"))
               calculateDynamicTable(table);
           });
+          
+          adjustAllInputWidths();
         });
     });
 
@@ -1055,4 +1048,21 @@ document.addEventListener("DOMContentLoaded", () => {
   loadData();
   renderParticipants();
   setupEventListeners();
+
+  document.addEventListener('input', (event) => {
+    if (event.target && typeof event.target.matches === 'function' && event.target.matches('input[type="number"], input[type="text"]')) {
+        adjustInputWidth(event.target);
+    }
+  });
+
+  document.addEventListener('blur', (event) => {
+    if (event.target && typeof event.target.matches === 'function' && event.target.matches('input[type="number"]')) {
+        if (event.target.value === '') {
+            event.target.value = '0';
+            event.target.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    }
+  }, true);
+
+  adjustAllInputWidths();
 });

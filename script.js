@@ -11,8 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!inputElement) return;
     const value = inputElement.value || inputElement.placeholder || '';
     // 1ch is the width of the '0' character.
-    // Add 1ch for a bit of padding.
-    const newWidth = `calc(${value.length}ch + 1ch)`;
+    // Add 2ch for a bit of padding.
+    const newWidth = `calc(${value.length}ch + 2ch)`;
     inputElement.style.width = newWidth;
   }
 

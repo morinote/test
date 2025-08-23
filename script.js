@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let participantInputValues = {};
   let ticketPrices = {};
 
-  function adjustInputWidth(inputElement) {
+    function adjustInputWidth(inputElement) {
     if (!inputElement) return;
     const value = inputElement.value || inputElement.placeholder || '';
     // 1ch is the width of the '0' character.

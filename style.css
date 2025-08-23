@@ -147,8 +147,7 @@ td {
 
 th:first-child,
 td:first-child {
-    width: 80px;
-    min-width: 80px;
+    width: 20%;
 }
 
 th {
@@ -203,7 +202,6 @@ input[type="number"] {
 .food-input,
 .ticket-quantity-input,
 .buyout-input {
-    min-width: 40px; /* 最小幅だけ設定 */
     width: auto; /* 自動幅へ変更 */
 }
 

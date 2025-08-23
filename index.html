@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>割り勘計算機</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header>
+        <h1>割り勘計算機</h1>
+    </header>
+    <main>
+        <section id="pricing-section">
+            <h2>チケット料金</h2>
+            <div class="table-container" id="pricing-table-container">
+                <!-- Pricing table will be loaded here by JavaScript -->
+            </div>
+        </section>
+
+        <section id="calculation-section">
+            <h2>チケット</h2>
+            <div id="participants-list" class="participant-checklist">
+                <!-- Participants will be loaded here by JavaScript -->
+            </div>
+            <button class="add-participant-global-btn">参加者を追加</button>
+            <p>合計人数: <span class="participant-count" data-section="ticket">0</span></p>
+            <div class="table-container" id="calculation-table-container">
+                <!-- Calculation table will be loaded here by JavaScript -->
+            </div>
+        </section>
+
+        <section id="beer-server-section">
+            <h2>ビアサーバー</h2>
+            <div id="beer-server-participants-list" class="participant-checklist">
+                <!-- Beer server participants will be loaded here by JavaScript -->
+            </div>
+            <button class="add-participant-global-btn">参加者を追加</button>
+            <p>合計人数: <span class="participant-count" data-section="beer-server">0</span></p>
+            <div class="table-container" id="beer-server-table-container">
+                <!-- Beer server table will be loaded here by JavaScript -->
+            </div>
+        </section>
+
+        <section id="food-section">
+            <h2>食材</h2>
+            <div id="food-participants-list" class="participant-checklist">
+                <!-- Food participants will be loaded here by JavaScript -->
+            </div>
+            <button class="add-participant-global-btn">参加者を追加</button>
+            <p>合計人数: <span class="participant-count" data-section="food">0</span></p>
+            <div class="table-container" id="food-table-container">
+                <!-- Food table will be loaded here by JavaScript -->
+            </div>
+        </section>
+
+        <div id="dynamic-sections-container"></div>
+        <button id="add-new-table-section-btn">新しいテーブルを追加</button>
+
+        <section id="summary-section">
+            <h2>総合収支</h2>
+            <div class="table-container">
+                <table id="summary-table">
+                    <thead>
+                        <!-- Headers will be loaded here by JavaScript -->
+                    </thead>
+                    <tbody>
+                        <!-- Summary will be loaded here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

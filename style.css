@@ -1,0 +1,222 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #0056b3;
+}
+
+section {
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Participant Checklist Styles */
+.participant-checklist {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.participant-checklist label {
+    background-color: #e9e9e9;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex; /* Flexbox for alignment */
+    align-items: center; /* Vertically center content */
+}
+
+.participant-checklist input[type="checkbox"] {
+    /* Hide default checkbox */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #007bff;
+    border-radius: 3px;
+    margin-right: 8px; /* Space between checkbox and text */
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+}
+
+.participant-checklist input[type="checkbox"]::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em #007bff; /* Fill color */
+    background-color: CanvasText;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 60%);
+}
+
+.participant-checklist input[type="checkbox"]:checked::before {
+    transform: scale(1);
+}
+
+/* Button Styles */
+button {
+    -webkit-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+/* Input Field Styles */
+input[type="number"] {
+    padding: 5px;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+}
+
+/* Hide spin buttons on number inputs for WebKit browsers (Safari, Chrome) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hide spin buttons on number inputs for Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Specific Input Widths */
+.ticket-price,
+.fee-input,
+.beer-server-input,
+.item-cost-input,
+.food-input {
+    width: 4rem;
+}
+
+.ticket-quantity-input,
+.buyout-input {
+    width: 2rem;
+}
+
+/* Balance Display Styles */
+.balance {
+    font-weight: bold;
+}
+
+.balance[data-sign="+"] {
+    color: #5cb85c; /* Green for positive balance */
+}
+
+.balance:not([data-sign="+"]) {
+    color: #d9534f; /* Red for negative balance */
+}
+
+.table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* スムーズなスクロールのため */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    section {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .participant-checklist {
+        gap: 8px;
+    }
+
+    .participant-checklist label {
+        padding: 10px;
+    }
+
+    /* Added for mobile responsiveness */
+    input[type="number"],
+    button {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    th, td {
+        padding: 8px 5px;
+        font-size: 0.9em;
+    }
+
+    .table-container {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+#calculation-section p,
+#beer-server-section p,
+#food-section p {
+    margin-top: 0;
+}

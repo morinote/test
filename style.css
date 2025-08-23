@@ -135,13 +135,22 @@ button:focus {
 table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: auto;
 }
 
 th,
 td {
-    padding: 12px;
+    padding: 8px;
     text-align: left;
     border-bottom: 1px solid #dddfe2;
+    word-break: break-word;
+    white-space: normal;
+}
+
+th:first-child,
+td:first-child {
+    width: 80px;
+    min-width: 80px;
 }
 
 th {
@@ -236,21 +245,4 @@ p {
     vertical-align: middle;
 }
 
-/* 総合収支テーブルのスタイル調整 */
-#summary-table {
-    table-layout: auto;
-    width: 100%;
-}
 
-#summary-table th,
-#summary-table td {
-    word-break: break-word;
-    white-space: normal;
-    padding: 8px; 
-}
-
-#summary-table th:first-child,
-#summary-table td:first-child {
-    width: 80px;
-    min-width: 80px;
-}

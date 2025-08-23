@@ -126,8 +126,6 @@ button:focus {
 
 /* Table Styles */
 .table-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     border: 1px solid #dddfe2;
     border-radius: 8px;
 }

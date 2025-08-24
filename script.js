@@ -388,6 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
         calculationFragment.appendChild(row2);
 
         const row3 = document.createElement('tr');
+        row3.className = 'label-row';
         row3.dataset.participant = p;
         row3.innerHTML = `<th></th><td>支払合計</td><td>一人当たり</td><td>払う/貰う</td>`;
         calculationFragment.appendChild(row3);

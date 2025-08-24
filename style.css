@@ -268,3 +268,8 @@ p {
 #calculation-table tbody tr:first-child.header-row {
     border-top: none;
 }
+
+#calculation-table .label-row td {
+    font-weight: bold;
+    background: #f0f2f5;
+}

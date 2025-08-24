@@ -1,15 +1,33 @@
 document.addEventListener("DOMContentLoaded", () => {
   const participants = [
-    "おおたけ", "なぎさ", "ひとし", "たけだ", "おさない", "だいすけ", "かず", "まえさき", "のぞみ", "みかこ",
-    "たつや", "はると", "キム", "めい", "しずか", "しょうま", "みう", "けんせい", "よっしー", "きょうか",
+    "おおたけ",
+    "なぎさ",
+    "ひとし",
+    "たけだ",
+    "おさない",
+    "だいすけ",
+    "かず",
+    "まえさき",
+    "のぞみ",
+    "みかこ",
+    "たつや",
+    "はると",
+    "キム",
+    "めい",
+    "しずか",
+    "しょうま",
+    "みう",
+    "けんせい",
+    "きょうか",
+    "よっしー",
   ];
 
   let participantInputValues = {};
   let ticketPrices = {};
 
-    function adjustInputWidth(inputElement) {
+  function adjustInputWidth(inputElement) {
     if (!inputElement) return;
-    const value = inputElement.value || inputElement.placeholder || '';
+    const value = inputElement.value || inputElement.placeholder || "";
     // 1ch is the width of the '0' character.
     // Add 2ch for a bit of padding.
     const newWidth = `calc(${value.length}ch + 4ch)`;
@@ -17,12 +35,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function adjustAllInputWidths() {
-    document.querySelectorAll('input[type="number"], input[type="text"]').forEach(adjustInputWidth);
+    document
+      .querySelectorAll('input[type="number"], input[type="text"]')
+      .forEach(adjustInputWidth);
   }
 
   function formatNumberWithCommas(number) {
     if (number === undefined || number === null || isNaN(number)) {
-        return "0"; 
+      return "0";
     }
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
@@ -357,103 +377,122 @@ document.addEventListener("DOMContentLoaded", () => {
 
     participants.forEach((p) => {
       if (participantInputValues[p]) {
-        participantInputValues[p]["mainチェック"] = selectedParticipants.includes(p);
-        participantInputValues[p]["ビアサーバーチェック"] = selectedBeerServerParticipants.includes(p);
-        participantInputValues[p]["食材チェック"] = selectedFoodParticipants.includes(p);
+        participantInputValues[p]["mainチェック"] =
+          selectedParticipants.includes(p);
+        participantInputValues[p]["ビアサーバーチェック"] =
+          selectedBeerServerParticipants.includes(p);
+        participantInputValues[p]["食材チェック"] =
+          selectedFoodParticipants.includes(p);
       }
     });
 
     updateParticipantCount("ticket", selectedParticipants.length);
-    updateParticipantCount("beer-server", selectedBeerServerParticipants.length);
+    updateParticipantCount(
+      "beer-server",
+      selectedBeerServerParticipants.length
+    );
     updateParticipantCount("food", selectedFoodParticipants.length);
 
-    const paymentStatusTableBody = document.querySelector("#calculation-table tbody");
-    const beerServerTableBody = document.querySelector("#beer-server-calculation-table tbody");
-    const foodTableBody = document.querySelector("#food-calculation-table tbody");
+    const paymentStatusTableBody = document.querySelector(
+      "#calculation-table tbody"
+    );
+    const beerServerTableBody = document.querySelector(
+      "#beer-server-calculation-table tbody"
+    );
+    const foodTableBody = document.querySelector(
+      "#food-calculation-table tbody"
+    );
 
     const updateAndSortTable = (tbody, selected, rowHTML, valueSetter) => {
-        const existingRows = new Map();
-        tbody.querySelectorAll("tr").forEach(row => {
-            existingRows.set(row.dataset.participant, row);
-        });
+      const existingRows = new Map();
+      tbody.querySelectorAll("tr").forEach((row) => {
+        existingRows.set(row.dataset.participant, row);
+      });
 
-        selected.forEach(participant => {
-            let row = existingRows.get(participant);
-            if (!row) {
-                row = tbody.insertRow();
-                row.dataset.participant = participant;
-                row.innerHTML = rowHTML(participant);
-                existingRows.set(participant, row);
-            }
-            row.style.display = "";
-        });
+      selected.forEach((participant) => {
+        let row = existingRows.get(participant);
+        if (!row) {
+          row = tbody.insertRow();
+          row.dataset.participant = participant;
+          row.innerHTML = rowHTML(participant);
+          existingRows.set(participant, row);
+        }
+        row.style.display = "";
+      });
 
-        existingRows.forEach((row, participant) => {
-            if (!selected.includes(participant)) {
-                row.style.display = "none";
-            }
-        });
+      existingRows.forEach((row, participant) => {
+        if (!selected.includes(participant)) {
+          row.style.display = "none";
+        }
+      });
 
-        participants.forEach(participant => {
-            const row = existingRows.get(participant);
-            if (row && selected.includes(participant)) {
-                tbody.appendChild(row);
-            }
-        });
-        
-        selected.forEach(participant => {
-            const row = existingRows.get(participant);
-            if(row) valueSetter(row, participant);
-        });
+      participants.forEach((participant) => {
+        const row = existingRows.get(participant);
+        if (row && selected.includes(participant)) {
+          tbody.appendChild(row);
+        }
+      });
+
+      selected.forEach((participant) => {
+        const row = existingRows.get(participant);
+        if (row) valueSetter(row, participant);
+      });
     };
 
     updateAndSortTable(
-        paymentStatusTableBody,
-        selectedParticipants,
-        (p) => `
-            <td>${p}</td>
-            <td><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="テント券" value="0"></td>
-            <td><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="駐車券" value="0"></td>
-            <td><input type="number" class="fee-input" data-participant="${p}" value="0"></td>
-            <td class="total-payment">0</td>
-            <td class="per-person-payment">0</td>
-            <td class="balance">0</td>
+      paymentStatusTableBody,
+      selectedParticipants,
+      (p) => `
+            <td data-label="参加者">${p}</td>
+            <td data-label="テント券"><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="テント券" value="0"></td>
+            <td data-label="駐車券"><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="駐車券" value="0"></td>
+            <td data-label="手数料"><input type="number" class="fee-input" data-participant="${p}" value="0"></td>
+            <td data-label="支払合計" class="total-payment">0</td>
+            <td data-label="一人当たり" class="per-person-payment">0</td>
+            <td data-label="払う/貰う" class="balance">0</td>
         `,
-        (row, p) => {
-            row.querySelector('.ticket-quantity-input[data-ticket-type="テント券"]').value = participantInputValues[p]["テント券"];
-            row.querySelector('.ticket-quantity-input[data-ticket-type="駐車券"]').value = participantInputValues[p]["駐車券"];
-            row.querySelector(".fee-input").value = participantInputValues[p]["手数料"];
-        }
+      (row, p) => {
+        row.querySelector(
+          '.ticket-quantity-input[data-ticket-type="テント券"]'
+        ).value = participantInputValues[p]["テント券"];
+        row.querySelector(
+          '.ticket-quantity-input[data-ticket-type="駐車券"]'
+        ).value = participantInputValues[p]["駐車券"];
+        row.querySelector(".fee-input").value =
+          participantInputValues[p]["手数料"];
+      }
     );
 
     updateAndSortTable(
-        beerServerTableBody,
-        selectedBeerServerParticipants,
-        (p) => `
+      beerServerTableBody,
+      selectedBeerServerParticipants,
+      (p) => `
             <td>${p}</td>
             <td><input type="number" class="beer-server-input" data-participant="${p}" value="0"></td>
             <td class="total-payment">0</td>
             <td class="per-person-payment">0</td>
             <td class="balance">0</td>
         `,
-        (row, p) => {
-            row.querySelector(".beer-server-input").value = participantInputValues[p]["ビアサーバー"];
-        }
+      (row, p) => {
+        row.querySelector(".beer-server-input").value =
+          participantInputValues[p]["ビアサーバー"];
+      }
     );
 
     updateAndSortTable(
-        foodTableBody,
-        selectedFoodParticipants,
-        (p) => `
+      foodTableBody,
+      selectedFoodParticipants,
+      (p) => `
             <td>${p}</td>
             <td><input type="number" class="food-input" data-participant="${p}" value="0"></td>
             <td class="total-payment">0</td>
             <td class="per-person-payment">0</td>
             <td class="balance">0</td>
         `,
-        (row, p) => {
-            row.querySelector(".food-input").value = participantInputValues[p]["食材"];
-        }
+      (row, p) => {
+        row.querySelector(".food-input").value =
+          participantInputValues[p]["食材"];
+      }
     );
 
     document
@@ -596,17 +635,21 @@ document.addEventListener("DOMContentLoaded", () => {
       totalFoodExpense = 0;
     const calculationResults = {};
 
-    const allParticipantsInTables = new Set([...selectedParticipants, ...selectedBeerServerParticipants, ...selectedFoodParticipants]);
+    const allParticipantsInTables = new Set([
+      ...selectedParticipants,
+      ...selectedBeerServerParticipants,
+      ...selectedFoodParticipants,
+    ]);
 
-    allParticipantsInTables.forEach(p => {
-        calculationResults[p] = {
-            totalPayment: 0,
-            beerServerPayment: 0,
-            foodPayment: 0,
-            balance: 0,
-            beerBalance: 0,
-            foodBalance: 0
-        };
+    allParticipantsInTables.forEach((p) => {
+      calculationResults[p] = {
+        totalPayment: 0,
+        beerServerPayment: 0,
+        foodPayment: 0,
+        balance: 0,
+        beerBalance: 0,
+        foodBalance: 0,
+      };
     });
 
     selectedParticipants.forEach((p) => {
@@ -617,8 +660,8 @@ document.addEventListener("DOMContentLoaded", () => {
       totalParkingTickets += parkingVal;
       totalCommission += fee;
       const totalPayment =
-        (tentVal * currentTicketPrices["テント券"]) +
-        (parkingVal * currentTicketPrices["駐車券"]) +
+        tentVal * currentTicketPrices["テント券"] +
+        parkingVal * currentTicketPrices["駐車券"] +
         fee;
       calculationResults[p].totalPayment = totalPayment;
       totalExpense += totalPayment;
@@ -786,7 +829,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function calculateDynamicTable(table) {
     const tableBody = table.querySelector("tbody");
-    const rows = Array.from(tableBody.querySelectorAll("tr")).filter(row => row.style.display !== 'none');
+    const rows = Array.from(tableBody.querySelectorAll("tr")).filter(
+      (row) => row.style.display !== "none"
+    );
     let totalCost = 0;
 
     rows.forEach((row) => {
@@ -882,57 +927,58 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".dynamic-table").forEach((table) => {
       const title = table.closest("section").querySelector("h2").textContent;
       table.querySelectorAll("tbody tr").forEach((row) => {
-        if (row.style.display !== 'none') { // 表示されている行のみを対象にする
-            const p = row.dataset.participant;
-            if (summary[p])
-              summary[p][title] = parseBalance(
-                row.querySelector(".balance").textContent
-              );
+        if (row.style.display !== "none") {
+          // 表示されている行のみを対象にする
+          const p = row.dataset.participant;
+          if (summary[p])
+            summary[p][title] = parseBalance(
+              row.querySelector(".balance").textContent
+            );
         }
       });
     });
 
     const allActiveParticipants = new Set();
-    document.querySelectorAll("tbody tr").forEach(row => {
-        if(row.style.display !== 'none' && row.dataset.participant) {
-            allActiveParticipants.add(row.dataset.participant);
-        }
+    document.querySelectorAll("tbody tr").forEach((row) => {
+      if (row.style.display !== "none" && row.dataset.participant) {
+        allActiveParticipants.add(row.dataset.participant);
+      }
     });
 
     summaryTbody.innerHTML = "";
     participants.forEach((participant) => {
-        if(!allActiveParticipants.has(participant)) return;
+      if (!allActiveParticipants.has(participant)) return;
 
-        const row = summaryTbody.insertRow();
-        let finalBalance = 0;
-        let cellHtml = `<td>${participant}</td>`;
-        headers.forEach((header) => {
-            if (header !== "参加者" && header !== "最終収支") {
-            const balance = summary[participant][header] || 0;
-            finalBalance += balance;
-            const balanceText =
-                balance > 0
-                ? `貰う: ${formatNumberWithCommas(balance)}`
-                : balance < 0
-                ? `払う: ${formatNumberWithCommas(Math.abs(balance))}`
-                : "0";
-            cellHtml += `<td class="balance"${
-                balance > 0 ? ' data-sign="+"' : ""
-            }>${balanceText}</td>`;
-            }
-        });
-        const roundedFinalBalance =
-            Math.sign(finalBalance) * Math.ceil(Math.abs(finalBalance) / 100) * 100;
-        const finalBalanceText =
-            roundedFinalBalance > 0
-            ? `貰う: ${formatNumberWithCommas(roundedFinalBalance)}`
-            : roundedFinalBalance < 0
-            ? `払う: ${formatNumberWithCommas(Math.abs(roundedFinalBalance))}`
-            : "0";
-        cellHtml += `<td class="balance"${
-            roundedFinalBalance > 0 ? ' data-sign="+"' : ""
-        }>${finalBalanceText}</td>`;
-        row.innerHTML = cellHtml;
+      const row = summaryTbody.insertRow();
+      let finalBalance = 0;
+      let cellHtml = `<td>${participant}</td>`;
+      headers.forEach((header) => {
+        if (header !== "参加者" && header !== "最終収支") {
+          const balance = summary[participant][header] || 0;
+          finalBalance += balance;
+          const balanceText =
+            balance > 0
+              ? `貰う: ${formatNumberWithCommas(balance)}`
+              : balance < 0
+              ? `払う: ${formatNumberWithCommas(Math.abs(balance))}`
+              : "0";
+          cellHtml += `<td class="balance"${
+            balance > 0 ? ' data-sign="+"' : ""
+          }>${balanceText}</td>`;
+        }
+      });
+      const roundedFinalBalance =
+        Math.sign(finalBalance) * Math.ceil(Math.abs(finalBalance) / 100) * 100;
+      const finalBalanceText =
+        roundedFinalBalance > 0
+          ? `貰う: ${formatNumberWithCommas(roundedFinalBalance)}`
+          : roundedFinalBalance < 0
+          ? `払う: ${formatNumberWithCommas(Math.abs(roundedFinalBalance))}`
+          : "0";
+      cellHtml += `<td class="balance"${
+        roundedFinalBalance > 0 ? ' data-sign="+"' : ""
+      }>${finalBalanceText}</td>`;
+      row.innerHTML = cellHtml;
     });
   }
 
@@ -1014,9 +1060,9 @@ document.addEventListener("DOMContentLoaded", () => {
             // Hide/show rows based on checkbox state
             const checkedParticipants = Array.from(
               participantsList.querySelectorAll("input:checked")
-            ).map(input => input.value);
+            ).map((input) => input.value);
 
-            tableBody.querySelectorAll("tr").forEach(row => {
+            tableBody.querySelectorAll("tr").forEach((row) => {
               const participant = row.dataset.participant;
               if (checkedParticipants.includes(participant)) {
                 row.style.display = "";
@@ -1024,18 +1070,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 row.style.display = "none";
               }
             });
-            
+
             // Sort rows
             const rows = new Map();
-            tableBody.querySelectorAll("tr").forEach(r => {
-                rows.set(r.dataset.participant, r);
+            tableBody.querySelectorAll("tr").forEach((r) => {
+              rows.set(r.dataset.participant, r);
             });
 
-            participants.forEach(p => {
-                const r = rows.get(p);
-                if (r) {
-                    tableBody.appendChild(r);
-                }
+            participants.forEach((p) => {
+              const r = rows.get(p);
+              if (r) {
+                tableBody.appendChild(r);
+              }
             });
 
             updateParticipantCount(
@@ -1049,7 +1095,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (event.target.classList.contains("item-cost-input"))
               calculateDynamicTable(table);
           });
-          
+
           adjustAllInputWidths();
         });
     });
@@ -1060,20 +1106,32 @@ document.addEventListener("DOMContentLoaded", () => {
   renderParticipants();
   setupEventListeners();
 
-  document.addEventListener('input', (event) => {
-    if (event.target && typeof event.target.matches === 'function' && event.target.matches('input[type="number"], input[type="text"]')) {
-        adjustInputWidth(event.target);
+  document.addEventListener("input", (event) => {
+    if (
+      event.target &&
+      typeof event.target.matches === "function" &&
+      event.target.matches('input[type="number"], input[type="text"]')
+    ) {
+      adjustInputWidth(event.target);
     }
   });
 
-  document.addEventListener('blur', (event) => {
-    if (event.target && typeof event.target.matches === 'function' && event.target.matches('input[type="number"]')) {
-        if (event.target.value === '') {
-            event.target.value = '0';
-            event.target.dispatchEvent(new Event('input', { bubbles: true }));
+  document.addEventListener(
+    "blur",
+    (event) => {
+      if (
+        event.target &&
+        typeof event.target.matches === "function" &&
+        event.target.matches('input[type="number"]')
+      ) {
+        if (event.target.value === "") {
+          event.target.value = "0";
+          event.target.dispatchEvent(new Event("input", { bubbles: true }));
         }
-    }
-  }, true);
+      }
+    },
+    true
+  );
 
   adjustAllInputWidths();
 });

@@ -48,15 +48,15 @@ document.addEventListener("DOMContentLoaded", () => {
             <tbody>
                 <tr>
                     <td>通し券</td>
-                    <td><input type="number" class="ticket-price" data-ticket-type="通し券" placeholder="0"></td>
+                    <td><input type="number" class="ticket-price" data-ticket-type="通し券" value="0"></td>
                 </tr>
                 <tr>
                     <td>テント券</td>
-                    <td><input type="number" class="ticket-price" data-ticket-type="テント券" placeholder="0"></td>
+                    <td><input type="number" class="ticket-price" data-ticket-type="テント券" value="0"></td>
                 </tr>
                 <tr>
                     <td>駐車券</td>
-                    <td><input type="number" class="ticket-price" data-ticket-type="駐車券" placeholder="0"></td>
+                    <td><input type="number" class="ticket-price" data-ticket-type="駐車券" value="0"></td>
                 </tr>
             </tbody>
         </table>
@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
             newRow.dataset.participant = participant;
             newRow.innerHTML = `
                             <td>${participant}</td>
-                            <td><input type="number" class="item-cost-input" placeholder="0"></td>
+                            <td><input type="number" class="item-cost-input" value="0"></td>
                             <td class="total-payment">0</td>
                             <td class="per-person-payment">0</td>
                             <td class="balance">0</td>
@@ -412,9 +412,9 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedParticipants,
         (p) => `
             <td>${p}</td>
-            <td><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="テント券" placeholder="0"></td>
-            <td><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="駐車券" placeholder="0"></td>
-            <td><input type="number" class="fee-input" data-participant="${p}" placeholder="0"></td>
+            <td><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="テント券" value="0"></td>
+            <td><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="駐車券" value="0"></td>
+            <td><input type="number" class="fee-input" data-participant="${p}" value="0"></td>
             <td class="total-payment">0</td>
             <td class="per-person-payment">0</td>
             <td class="balance">0</td>
@@ -431,7 +431,7 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedBeerServerParticipants,
         (p) => `
             <td>${p}</td>
-            <td><input type="number" class="beer-server-input" data-participant="${p}" placeholder="0"></td>
+            <td><input type="number" class="beer-server-input" data-participant="${p}" value="0"></td>
             <td class="total-payment">0</td>
             <td class="per-person-payment">0</td>
             <td class="balance">0</td>
@@ -446,7 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedFoodParticipants,
         (p) => `
             <td>${p}</td>
-            <td><input type="number" class="food-input" data-participant="${p}" placeholder="0"></td>
+            <td><input type="number" class="food-input" data-participant="${p}" value="0"></td>
             <td class="total-payment">0</td>
             <td class="per-person-payment">0</td>
             <td class="balance">0</td>
@@ -992,7 +992,7 @@ document.addEventListener("DOMContentLoaded", () => {
             newRow.dataset.participant = participant;
             newRow.innerHTML = `
                     <td>${participant}</td>
-                    <td><input type="number" class="item-cost-input" placeholder="0"></td>
+                    <td><input type="number" class="item-cost-input" value="0"></td>
                     <td class="total-payment">0</td>
                     <td class="per-person-payment">0</td>
                     <td class="balance">0</td>
@@ -1013,7 +1013,7 @@ document.addEventListener("DOMContentLoaded", () => {
               newRow.dataset.participant = participant;
               newRow.innerHTML = `
                         <td>${participant}</td>
-                        <td><input type="number" class="item-cost-input" placeholder="0"></td>
+                        <td><input type="number" class="item-cost-input" value="0"></td>
                         <td class="total-payment">0</td>
                         <td class="per-person-payment">0</td>
                         <td class="balance">0</td>

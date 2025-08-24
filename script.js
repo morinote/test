@@ -1005,30 +1005,40 @@ document.addEventListener("DOMContentLoaded", () => {
               .length
           );
 
-          participantsList.addEventListener("change", (event) => {
-            const participant = event.target.value,
-              isChecked = event.target.checked;
-            if (isChecked) {
-              const newRow = tableBody.insertRow();
-              newRow.dataset.participant = participant;
-              newRow.innerHTML = `
-                        <td>${participant}</td>
-                        <td><input type="number" class="item-cost-input" value="0"></td>
-                        <td class="total-payment">0</td>
-                        <td class="per-person-payment">0</td>
-                        <td class="balance">0</td>
-                    `;
-            } else {
-              const rowToRemove = tableBody.querySelector(
-                `tr[data-participant="${participant}"]`
-              );
-              if (rowToRemove) rowToRemove.remove();
-            }
+          participantsList.addEventListener("change", () => {
+            const tableBody = newSection.querySelector(".dynamic-table tbody");
+            const table = newSection.querySelector(".dynamic-table");
+
+            // Hide/show rows based on checkbox state
+            const checkedParticipants = Array.from(
+              participantsList.querySelectorAll("input:checked")
+            ).map(input => input.value);
+
+            tableBody.querySelectorAll("tr").forEach(row => {
+              const participant = row.dataset.participant;
+              if (checkedParticipants.includes(participant)) {
+                row.style.display = "";
+              } else {
+                row.style.display = "none";
+              }
+            });
+            
+            // Sort rows
+            const rows = new Map();
+            tableBody.querySelectorAll("tr").forEach(r => {
+                rows.set(r.dataset.participant, r);
+            });
+
+            participants.forEach(p => {
+                const r = rows.get(p);
+                if (r) {
+                    tableBody.appendChild(r);
+                }
+            });
+
             updateParticipantCount(
               `dynamic-${title}`,
-              participantsList.querySelectorAll(
-                'input[type="checkbox"]:checked'
-              ).length
+              checkedParticipants.length
             );
             calculateDynamicTable(table);
           });

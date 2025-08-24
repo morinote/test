@@ -7,19 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let participantInputValues = {};
   let ticketPrices = {};
 
-    function adjustInputWidth(inputElement) {
-    if (!inputElement) return;
-    const value = inputElement.value || inputElement.placeholder || '';
-    // 1ch is the width of the '0' character.
-    // Add 2ch for a bit of padding.
-    const newWidth = `calc(${value.length}ch + 2ch)`;
-    inputElement.style.width = newWidth;
-  }
-
-  function adjustAllInputWidths() {
-    document.querySelectorAll('input[type="number"], input[type="text"]').forEach(adjustInputWidth);
-  }
-
   function formatNumberWithCommas(number) {
     if (number === undefined || number === null || isNaN(number)) {
         return "0"; 
@@ -294,7 +281,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     updateTables();
-    adjustAllInputWidths();
   }
 
   document.addEventListener("click", (event) => {
@@ -781,7 +767,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const results = performCalculations(inputs);
     updateUIWithResults(results);
     updateSummaryTable();
-    adjustAllInputWidths();
   }
 
   function calculateDynamicTable(table) {
@@ -1037,8 +1022,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (event.target.classList.contains("item-cost-input"))
               calculateDynamicTable(table);
           });
-          
-          adjustAllInputWidths();
         });
     });
 
@@ -1048,12 +1031,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderParticipants();
   setupEventListeners();
 
-  document.addEventListener('input', (event) => {
-    if (event.target && typeof event.target.matches === 'function' && event.target.matches('input[type="number"], input[type="text"]')) {
-        adjustInputWidth(event.target);
-    }
-  });
-
   document.addEventListener('blur', (event) => {
     if (event.target && typeof event.target.matches === 'function' && event.target.matches('input[type="number"]')) {
         if (event.target.value === '') {
@@ -1062,8 +1039,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
   }, true);
-
-  adjustAllInputWidths();
 });
 
 // ---
@@ -1071,5 +1046,5 @@ document.addEventListener("DOMContentLoaded", () => {
 // v2: Added beer server and food sections
 // v3: Added dynamic table sections
 // v4: Refactored calculation logic and added summary table
-// v5: Added input width adjustment and blur event for empty inputs
+// v5: Added blur event for empty inputs
 // ---

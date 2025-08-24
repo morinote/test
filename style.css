@@ -202,7 +202,7 @@ input[type="number"] {
 .food-input,
 .ticket-quantity-input,
 .buyout-input {
-    width: 100px;
+    width: auto; /* 自動幅へ変更 */
 }
 
 /* Balance Display Styles */

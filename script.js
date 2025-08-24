@@ -786,7 +786,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function calculateDynamicTable(table) {
     const tableBody = table.querySelector("tbody");
-    const rows = Array.from(tableBody.querySelectorAll("tr"));
+    const rows = Array.from(tableBody.querySelectorAll("tr")).filter(row => row.style.display !== 'none');
     let totalCost = 0;
 
     rows.forEach((row) => {

@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const value = inputElement.value || inputElement.placeholder || '';
     // 1ch is the width of the '0' character.
     // Add 2ch for a bit of padding.
-    const newWidth = `calc(${value.length}ch + 2ch)`;
+    const newWidth = `calc(${value.length}ch + 4ch)`;
     inputElement.style.width = newWidth;
   }
 

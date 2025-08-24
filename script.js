@@ -882,11 +882,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".dynamic-table").forEach((table) => {
       const title = table.closest("section").querySelector("h2").textContent;
       table.querySelectorAll("tbody tr").forEach((row) => {
-        const p = row.dataset.participant;
-        if (summary[p])
-          summary[p][title] = parseBalance(
-            row.querySelector(".balance").textContent
-          );
+        if (row.style.display !== 'none') { // 表示されている行のみを対象にする
+            const p = row.dataset.participant;
+            if (summary[p])
+              summary[p][title] = parseBalance(
+                row.querySelector(".balance").textContent
+              );
+        }
       });
     });
 

@@ -28,8 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function adjustInputWidth(inputElement) {
     if (!inputElement) return;
     const value = inputElement.value || inputElement.placeholder || "";
-    // 1ch is the width of the '0' character.
-    // Add 2ch for a bit of padding.
     const newWidth = `calc(${value.length}ch + 4ch)`;
     inputElement.style.width = newWidth;
   }
@@ -84,31 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function createCalculationTableHTML() {
-    return `
-        <table id="calculation-table">
-            <thead>
-                <tr>
-                    <th>参加者</th>
-                    <th>テント券</th>
-                    <th>駐車券</th>
-                    <th>手数料</th>
-                    <th>支払合計</th>
-                    <th>一人当たり</th>
-                    <th>払う/貰う</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="1">合計</td>
-                    <td id="total-tent-tickets">0</td>
-                    <td id="total-parking-tickets">0</td>
-                    <td colspan="4"></td>
-                </tr>
-            </tfoot>
-        </table>
-        `;
+    // This now only creates the table shell. The content is built in updateTables.
+    return `<table id="calculation-table"><tbody></tbody></table>`;
   }
 
   function createBeerServerTableHTML() {
@@ -181,20 +156,13 @@ document.addEventListener("DOMContentLoaded", () => {
       participantInputValues = JSON.parse(savedParticipantInputValues);
       participants.forEach((participant) => {
         if (participantInputValues[participant]) {
-          if (
-            participantInputValues[participant]["mainチェック"] === undefined
-          ) {
+          if (participantInputValues[participant]["mainチェック"] === undefined) {
             participantInputValues[participant]["mainチェック"] = true;
           }
-          if (
-            participantInputValues[participant]["ビアサーバーチェック"] ===
-            undefined
-          ) {
+          if (participantInputValues[participant]["ビアサーバーチェック"] === undefined) {
             participantInputValues[participant]["ビアサーバーチェック"] = true;
           }
-          if (
-            participantInputValues[participant]["食材チェック"] === undefined
-          ) {
+          if (participantInputValues[participant]["食材チェック"] === undefined) {
             participantInputValues[participant]["食材チェック"] = true;
           }
         }
@@ -393,76 +361,54 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     updateParticipantCount("food", selectedFoodParticipants.length);
 
-    const paymentStatusTableBody = document.querySelector(
-      "#calculation-table tbody"
-    );
+    // --- Calculation Table (New 4-row structure) ---
+    const calculationTbody = document.querySelector("#calculation-table tbody");
+    calculationTbody.innerHTML = ""; // Clear previous content
+    const calculationFragment = document.createDocumentFragment();
+
+    participants.forEach((p) => {
+      if (selectedParticipants.includes(p)) {
+        const values = participantInputValues[p];
+        
+        const row1 = document.createElement('tr');
+        row1.className = 'header-row';
+        row1.dataset.participant = p;
+        row1.innerHTML = `<th>${p}</th><th>テント券</th><th>駐車券</th><th>手数料</th>`;
+        calculationFragment.appendChild(row1);
+
+        const row2 = document.createElement('tr');
+        row2.className = 'sub-header';
+        row2.dataset.participant = p;
+        row2.innerHTML = `
+            <th></th>
+            <td><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="テント券" value="${values["テント券"]}"></td>
+            <td><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="駐車券" value="${values["駐車券"]}"></td>
+            <td><input type="number" class="fee-input" data-participant="${p}" value="${values["手数料"]}"></td>
+        `;
+        calculationFragment.appendChild(row2);
+
+        const row3 = document.createElement('tr');
+        row3.dataset.participant = p;
+        row3.innerHTML = `<th></th><td>支払合計</td><td>一人当たり</td><td>払う/貰う</td>`;
+        calculationFragment.appendChild(row3);
+
+        const row4 = document.createElement('tr');
+        row4.dataset.participant = p;
+        row4.innerHTML = `
+            <th></th>
+            <td class="total-payment">0</td>
+            <td class="per-person-payment">0</td>
+            <td class="balance">0</td>
+        `;
+        calculationFragment.appendChild(row4);
+      }
+    });
+    calculationTbody.appendChild(calculationFragment);
+
+    // --- Beer Server & Food Tables (Standard) ---
     const beerServerTableBody = document.querySelector(
       "#beer-server-calculation-table tbody"
     );
-    const foodTableBody = document.querySelector(
-      "#food-calculation-table tbody"
-    );
-
-    const updateAndSortTable = (tbody, selected, rowHTML, valueSetter) => {
-      const existingRows = new Map();
-      tbody.querySelectorAll("tr").forEach((row) => {
-        existingRows.set(row.dataset.participant, row);
-      });
-
-      selected.forEach((participant) => {
-        let row = existingRows.get(participant);
-        if (!row) {
-          row = tbody.insertRow();
-          row.dataset.participant = participant;
-          row.innerHTML = rowHTML(participant);
-          existingRows.set(participant, row);
-        }
-        row.style.display = "";
-      });
-
-      existingRows.forEach((row, participant) => {
-        if (!selected.includes(participant)) {
-          row.style.display = "none";
-        }
-      });
-
-      participants.forEach((participant) => {
-        const row = existingRows.get(participant);
-        if (row && selected.includes(participant)) {
-          tbody.appendChild(row);
-        }
-      });
-
-      selected.forEach((participant) => {
-        const row = existingRows.get(participant);
-        if (row) valueSetter(row, participant);
-      });
-    };
-
-    updateAndSortTable(
-      paymentStatusTableBody,
-      selectedParticipants,
-      (p) => `
-            <td data-label="参加者">${p}</td>
-            <td data-label="テント券"><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="テント券" value="0"></td>
-            <td data-label="駐車券"><input type="number" class="ticket-quantity-input" data-participant="${p}" data-ticket-type="駐車券" value="0"></td>
-            <td data-label="手数料"><input type="number" class="fee-input" data-participant="${p}" value="0"></td>
-            <td data-label="支払合計" class="total-payment">0</td>
-            <td data-label="一人当たり" class="per-person-payment">0</td>
-            <td data-label="払う/貰う" class="balance">0</td>
-        `,
-      (row, p) => {
-        row.querySelector(
-          '.ticket-quantity-input[data-ticket-type="テント券"]'
-        ).value = participantInputValues[p]["テント券"];
-        row.querySelector(
-          '.ticket-quantity-input[data-ticket-type="駐車券"]'
-        ).value = participantInputValues[p]["駐車券"];
-        row.querySelector(".fee-input").value =
-          participantInputValues[p]["手数料"];
-      }
-    );
-
     updateAndSortTable(
       beerServerTableBody,
       selectedBeerServerParticipants,
@@ -479,6 +425,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     );
 
+    const foodTableBody = document.querySelector(
+      "#food-calculation-table tbody"
+    );
     updateAndSortTable(
       foodTableBody,
       selectedFoodParticipants,
@@ -495,6 +444,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     );
 
+    // --- Event Listeners ---
     document
       .querySelectorAll(
         ".ticket-quantity-input, .fee-input, .beer-server-input, .food-input"
@@ -522,6 +472,42 @@ document.addEventListener("DOMContentLoaded", () => {
     calculateAndRender();
     saveData();
   }
+
+  const updateAndSortTable = (tbody, selected, rowHTML, valueSetter) => {
+    const existingRows = new Map();
+    tbody.querySelectorAll("tr").forEach((row) => {
+      existingRows.set(row.dataset.participant, row);
+    });
+
+    selected.forEach((participant) => {
+      let row = existingRows.get(participant);
+      if (!row) {
+        row = tbody.insertRow();
+        row.dataset.participant = participant;
+        row.innerHTML = rowHTML(participant);
+        existingRows.set(participant, row);
+      }
+      row.style.display = "";
+    });
+
+    existingRows.forEach((row, participant) => {
+      if (!selected.includes(participant)) {
+        row.style.display = "none";
+      }
+    });
+
+    participants.forEach((participant) => {
+      const row = existingRows.get(participant);
+      if (row && selected.includes(participant)) {
+        tbody.appendChild(row);
+      }
+    });
+
+    selected.forEach((participant) => {
+      const row = existingRows.get(participant);
+      if (row) valueSetter(row, participant);
+    });
+  };
 
   function getInputs() {
     const selectedParticipants = Array.from(
@@ -564,24 +550,17 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     });
 
-    document.querySelectorAll("#calculation-table tbody tr").forEach((row) => {
-      const participant = row.dataset.participant;
-      if (participantData[participant]) {
-        participantData[participant]["テント券"] =
-          parseInt(
-            row.querySelector(
-              '.ticket-quantity-input[data-ticket-type="テント券"]'
-            ).value
-          ) || 0;
-        participantData[participant]["駐車券"] =
-          parseInt(
-            row.querySelector(
-              '.ticket-quantity-input[data-ticket-type="駐車券"]'
-            ).value
-          ) || 0;
-        participantData[participant]["手数料"] =
-          parseInt(row.querySelector(".fee-input").value) || 0;
-      }
+    // Read from new 4-row structure
+    document.querySelectorAll("#calculation-table .header-row").forEach((headerRow) => {
+        const participant = headerRow.dataset.participant;
+        if (participantData[participant]) {
+            const inputRow = headerRow.nextElementSibling;
+            if (inputRow) {
+                participantData[participant]["テント券"] = parseInt(inputRow.querySelector('.ticket-quantity-input[data-ticket-type="テント券"]').value) || 0;
+                participantData[participant]["駐車券"] = parseInt(inputRow.querySelector('.ticket-quantity-input[data-ticket-type="駐車券"]').value) || 0;
+                participantData[participant]["手数料"] = parseInt(inputRow.querySelector(".fee-input").value) || 0;
+            }
+        }
     });
 
     document
@@ -725,30 +704,28 @@ document.addEventListener("DOMContentLoaded", () => {
       totalParkingTickets,
     } = results;
 
-    document.querySelectorAll("#calculation-table tbody tr").forEach((row) => {
-      const p = row.dataset.participant;
-      if (calculationResults[p]) {
-        const res = calculationResults[p];
-        row.querySelector(".total-payment").textContent =
-          formatNumberWithCommas(res.totalPayment);
-        row.querySelector(".per-person-payment").textContent =
-          formatNumberWithCommas(Math.round(perPersonExpense));
-        const balanceCell = row.querySelector(".balance"),
-          balanceValue = Math.round(res.balance);
-        balanceCell.removeAttribute("data-sign");
-        if (balanceValue > 0) {
-          balanceCell.textContent = `貰う: ${formatNumberWithCommas(
-            balanceValue
-          )}`;
-          balanceCell.dataset.sign = "+";
-        } else if (balanceValue < 0) {
-          balanceCell.textContent = `払う: ${formatNumberWithCommas(
-            Math.abs(balanceValue)
-          )}`;
-        } else {
-          balanceCell.textContent = "0";
+    // Update new 4-row structure
+    document.querySelectorAll("#calculation-table .header-row").forEach((headerRow) => {
+        const p = headerRow.dataset.participant;
+        if (calculationResults[p]) {
+            const res = calculationResults[p];
+            const valueRow = headerRow.nextElementSibling.nextElementSibling.nextElementSibling;
+            if (valueRow) {
+                valueRow.querySelector(".total-payment").textContent = formatNumberWithCommas(res.totalPayment);
+                valueRow.querySelector(".per-person-payment").textContent = formatNumberWithCommas(Math.round(perPersonExpense));
+                const balanceCell = valueRow.querySelector(".balance");
+                const balanceValue = Math.round(res.balance);
+                balanceCell.removeAttribute("data-sign");
+                if (balanceValue > 0) {
+                    balanceCell.textContent = `貰う: ${formatNumberWithCommas(balanceValue)}`;
+                    balanceCell.dataset.sign = "+";
+                } else if (balanceValue < 0) {
+                    balanceCell.textContent = `払う: ${formatNumberWithCommas(Math.abs(balanceValue))}`;
+                } else {
+                    balanceCell.textContent = "0";
+                }
+            }
         }
-      }
     });
 
     document
@@ -813,10 +790,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-    document.getElementById("total-tent-tickets").textContent =
-      totalTentTickets;
-    document.getElementById("total-parking-tickets").textContent =
-      totalParkingTickets;
+    const totalTentTicketsEl = document.getElementById("total-tent-tickets");
+    if(totalTentTicketsEl) totalTentTicketsEl.textContent = totalTentTickets;
+    const totalParkingTicketsEl = document.getElementById("total-parking-tickets");
+    if(totalParkingTicketsEl) totalParkingTicketsEl.textContent = totalParkingTickets;
   }
 
   function calculateAndRender() {
@@ -899,13 +876,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return 0;
     };
 
-    document.querySelectorAll("#calculation-table tbody tr").forEach((row) => {
-      const p = row.dataset.participant;
-      if (summary[p])
-        summary[p][calculationSectionTitle] = parseBalance(
-          row.querySelector(".balance").textContent
-        );
+    document.querySelectorAll("#calculation-table .header-row").forEach((headerRow) => {
+        const p = headerRow.dataset.participant;
+        if(summary[p]) {
+            const valueRow = headerRow.nextElementSibling.nextElementSibling.nextElementSibling;
+            if(valueRow) {
+                summary[p][calculationSectionTitle] = parseBalance(valueRow.querySelector(".balance").textContent);
+            }
+        }
     });
+
     document
       .querySelectorAll("#beer-server-calculation-table tbody tr")
       .forEach((row) => {
@@ -928,7 +908,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const title = table.closest("section").querySelector("h2").textContent;
       table.querySelectorAll("tbody tr").forEach((row) => {
         if (row.style.display !== "none") {
-          // 表示されている行のみを対象にする
           const p = row.dataset.participant;
           if (summary[p])
             summary[p][title] = parseBalance(
@@ -939,6 +918,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const allActiveParticipants = new Set();
+    document.querySelectorAll("#calculation-table .header-row").forEach(row => allActiveParticipants.add(row.dataset.participant));
     document.querySelectorAll("tbody tr").forEach((row) => {
       if (row.style.display !== "none" && row.dataset.participant) {
         allActiveParticipants.add(row.dataset.participant);

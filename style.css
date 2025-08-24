@@ -224,8 +224,6 @@ p {
     color: #606770;
 }
 
-
-
 #dynamic-sections-container h2 input {
     font-size: 1em;
     padding: 10px;
@@ -241,50 +239,32 @@ p {
     vertical-align: middle;
 }
 
-/* Responsive Card Layout for Calculation Table */
-@media screen and (max-width: 767px) {
-    #calculation-table thead {
-        display: none;
-    }
+/* Styles for 4-Row Participant Block Layout in Calculation Table */
+#calculation-table .header-row th,
+#calculation-table .sub-header th,
+#calculation-table .sub-header td {
+    background: #f0f2f5;
+}
 
-    #calculation-table tbody tr {
-        display: block;
-        margin-bottom: 1rem;
-        border: 1px solid #dddfe2;
-        border-radius: 8px;
-        padding: 1rem;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    }
+#calculation-table .header-row th {
+    font-weight: bold;
+    font-size: 1.1em;
+}
 
-    #calculation-table tbody td {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        text-align: right;
-        border-bottom: 1px solid #e9ebee;
-        padding: 0.75rem 0;
-    }
+#calculation-table .sub-header {
+    color: #606770;
+}
 
-    #calculation-table tbody tr td:last-child {
-        border-bottom: none;
-    }
+#calculation-table th,
+#calculation-table td {
+    text-align: center;
+}
 
-    #calculation-table tbody td::before {
-        content: attr(data-label);
-        font-weight: 600;
-        text-align: left;
-        margin-right: 1rem;
-    }
+/* Add a border between participant blocks */
+#calculation-table .header-row {
+    border-top: 2px solid #1877f2;
+}
 
-    #calculation-table tbody td:first-child {
-        font-size: 1.1em;
-        font-weight: bold;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #dddfe2;
-        justify-content: center;
-    }
-    
-    #calculation-table tbody td:first-child::before {
-        display: none;
-    }
+#calculation-table tbody tr:first-child.header-row {
+    border-top: none;
 }

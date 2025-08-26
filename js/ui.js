@@ -311,7 +311,7 @@ function createNewSection() {
     const sectionId = `dynamic-section-${Date.now()}`;
     const rawSectionName = prompt("新しいテーブルの名前を入力してください:", "例：ガソリン代");
     if (!rawSectionName) return;
-    const sectionNameForData = rawSectionName + "料金";
+    const sectionNameForData = rawSectionName.endsWith('料金') ? rawSectionName : rawSectionName + "料金";
 
     const dynamicSectionsContainer = document.getElementById('dynamic-sections-container');
     const newSection = document.createElement('section');

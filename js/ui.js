@@ -196,7 +196,7 @@ function updateSummaryTable(results) {
     // ヘッダーの動的生成
     const headers = ['参加者', 'チケット', 'ビアサーバー', '食材'];
     if (dynamicSections) {
-        dynamicSections.forEach(sec => headers.push(sec.name));
+        dynamicSections.forEach(sec => headers.push(sec.name.replace(/料金$/, '')));
     }
     headers.push('最終収支');
     summaryThead.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;

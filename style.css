@@ -1,24 +1,31 @@
-/* General Styles */
+
+:root {
+    --primary-color: #1877f2;
+    --primary-color-hover: #166fe5;
+    --secondary-color: #42b72a;
+    --secondary-color-hover: #36a420;
+    --background-color: #f0f2f5;
+    --surface-color: #fff;
+    --text-color-primary: #1c1e21;
+    --text-color-secondary: #606770;
+    --text-color-on-primary: #fff;
+    --border-color: #dddfe2;
+    --border-radius: 8px;
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-        "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-family);
     margin: 0;
     padding: 0;
-    background-color: #f0f2f5;
-    color: #1c1e21;
+    background-color: var(--background-color);
+    color: var(--text-color-primary);
     -webkit-font-smoothing: antialiased;
 }
 
-.container {
-    max-width: 100%;
-    margin: 0;
-    background-color: #fff;
-    padding: 0;
-}
-
-header {
-    background-color: #1877f2;
-    color: white;
+.main-header {
+    background-color: var(--primary-color);
+    color: var(--text-color-on-primary);
     padding: 16px;
     text-align: center;
     position: sticky;
@@ -27,32 +34,31 @@ header {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+.main-header__title {
     margin: 0;
     font-size: 20px;
 }
 
-h2 {
-    font-size: 18px;
-    color: #1c1e21;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #dddfe2;
-    margin-top: 0;
-}
-
-main {
+.main-content {
     padding: 16px;
 }
 
-section {
-    background-color: #fff;
+.content-section {
+    background-color: var(--surface-color);
     margin-bottom: 16px;
     padding: 16px;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Participant Checklist Styles */
+.content-section__title {
+    font-size: 18px;
+    color: var(--text-color-primary);
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+    margin-top: 0;
+}
+
 .participant-checklist {
     display: flex;
     flex-wrap: wrap;
@@ -60,7 +66,7 @@ section {
     margin-bottom: 16px;
 }
 
-.participant-checklist label {
+.participant-checklist__label {
     background-color: #e7f3ff;
     padding: 10px 14px;
     border-radius: 18px;
@@ -71,33 +77,30 @@ section {
     transition: background-color 0.2s ease;
 }
 
-.participant-checklist input[type="checkbox"] {
-    display: none; /* Hide it */
+.participant-checklist__checkbox {
+    display: none;
 }
 
-.participant-checklist input[type="checkbox"] + span {
-    color: #1877f2;
+.participant-checklist__name {
+    color: var(--primary-color);
 }
 
-.participant-checklist input[type="checkbox"]:checked + span {
+.participant-checklist__label--checked {
+    background-color: var(--primary-color);
+}
+
+.participant-checklist__label--checked .participant-checklist__name {
+    color: var(--text-color-on-primary);
     font-weight: bold;
 }
 
-.participant-checklist label:has(input:checked) {
-    background-color: #1877f2;
-}
 
-.participant-checklist label:has(input:checked) span {
-    color: white;
-}
-
-/* Button Styles */
-button {
+.btn {
     -webkit-appearance: none;
     appearance: none;
     box-sizing: border-box;
-    background-color: #1877f2;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--text-color-on-primary);
     padding: 12px 16px;
     border: none;
     border-radius: 6px;
@@ -110,81 +113,73 @@ button {
     transition: background-color 0.2s ease;
 }
 
-button:hover,
-button:focus {
-    background-color: #166fe5;
+.btn:hover,
+.btn:focus {
+    background-color: var(--primary-color-hover);
     outline: none;
 }
 
-#add-new-table-section-btn {
-    background-color: #42b72a;
+.btn--add-section {
+    background-color: var(--secondary-color);
 }
-#add-new-table-section-btn:hover,
-#add-new-table-section-btn:focus {
-    background-color: #36a420;
+.btn--add-section:hover,
+.btn--add-section:focus {
+    background-color: var(--secondary-color-hover);
 }
 
-/* Table Styles */
 .table-container {
-    border: 1px solid #dddfe2;
-    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow-x: auto;
 }
 
-table {
+.data-table {
     width: 100%;
     border-collapse: collapse;
     table-layout: auto;
 }
 
-th,
-td {
+.data-table th,
+.data-table td {
     padding: 8px;
     text-align: left;
-    border-bottom: 1px solid #dddfe2;
+    border-bottom: 1px solid var(--border-color);
     word-break: break-word;
     white-space: normal;
 }
 
-th:first-child,
-td:first-child {
+.data-table th:first-child,
+.data-table td:first-child {
     width: 20%;
 }
 
-th {
+.data-table thead th {
     background-color: #f5f6f7;
     font-size: 14px;
     font-weight: 600;
 }
 
-td {
-    font-size: 14px;
-}
-
-tbody tr:last-child td {
+.data-table tbody tr:last-child td {
     border-bottom: none;
 }
 
-/* Input Field Styles */
-input[type="number"],
-input[type="text"] {
+.form-input {
     padding: 10px;
     box-sizing: border-box;
     background-color: #f5f6f7;
-    color: #1c1e21;
-    border: 1px solid #dddfe2;
+    color: var(--text-color-primary);
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     width: 100%;
     font-size: 14px;
 }
 
-input[type="number"]:focus,
-input[type="text"]:focus {
-    border-color: #1877f2;
-    background-color: #fff;
+.form-input:focus {
+    border-color: var(--primary-color);
+    background-color: var(--surface-color);
     outline: none;
 }
 
-/* Hide spin buttons */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -194,82 +189,105 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-/* Specific Input Widths */
-.ticket-price,
-.fee-input,
-.beer-server-input,
-.item-cost-input,
-.food-input,
-.ticket-quantity-input,
-.buyout-input {
-    width: auto; /* 自動幅へ変更 */
+.form-input--numeric {
+    width: auto;
 }
 
-/* Balance Display Styles */
 .balance {
     font-weight: bold;
 }
 
-.balance[data-sign="+"] {
-    color: #31a24c; /* Green */
+.balance--positive {
+    color: #31a24c;
 }
 
-.balance:not([data-sign="+"]) {
-    color: #fa383e; /* Red */
+.balance--negative {
+    color: #fa383e;
 }
 
-p {
+.section-summary {
     margin-top: 0;
     margin-bottom: 16px;
-    color: #606770;
+    color: var(--text-color-secondary);
 }
 
-#dynamic-sections-container h2 input {
-    font-size: 1em;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    width: calc(100% - 130px); /* Adjust width based on button */
+.dynamic-section__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-#dynamic-sections-container button.add-table-btn {
+.dynamic-section__header input {
+    flex-grow: 1;
+    margin-right: 10px;
+    border: none;
+    background: transparent;
+    font-size: 18px; /* Match h2 font-size */
+    font-weight: bold; /* Match h2 font-weight */
+    color: var(--text-color-primary);
+    padding: 0;
+}
+
+.dynamic-section__header input:focus {
+    outline: none;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+.dynamic-section__header .btn {
     width: auto;
-    padding: 10px 16px;
+    padding: 8px 12px;
     margin-left: 10px;
     vertical-align: middle;
+    flex-shrink: 0; /* Prevent button from shrinking */
 }
 
-/* Styles for 4-Row Participant Block Layout in Calculation Table */
-#calculation-table .header-row th,
-#calculation-table .sub-header th,
-#calculation-table .sub-header td {
-    background: #f0f2f5;
+.calculation-table__header-row th,
+.calculation-table__label-row {
+    background: var(--background-color);
 }
 
-#calculation-table .header-row th {
+.calculation-table__header-row th {
     font-weight: bold;
     font-size: 1.1em;
+    white-space: nowrap;
 }
 
-#calculation-table .sub-header {
-    color: #606770;
+.calculation-table__sub-header {
+    color: var(--text-color-secondary);
 }
 
-#calculation-table th,
-#calculation-table td {
+.calculation-table th,
+.calculation-table td {
     text-align: center;
 }
 
-/* Add a border between participant blocks */
-#calculation-table .header-row {
-    border-top: 2px solid #1877f2;
+.calculation-table__header-row {
+    border-top: 2px solid var(--primary-color);
 }
 
-#calculation-table tbody tr:first-child.header-row {
+.calculation-table tbody tr:first-child.calculation-table__header-row {
     border-top: none;
 }
 
-#calculation-table .label-row td {
+.calculation-table__label-row td {
     font-weight: bold;
-    background: #f0f2f5;
+}
+
+.calculation-table__sub-header td,
+.calculation-table__value-row td {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.calculation-table__header-row th:first-child,
+.calculation-table__sub-header th:first-child,
+.calculation-table__label-row th:first-child,
+.calculation-table__value-row th:first-child {
+    width: 0;
+    padding: 0;
+    border: none;
+}
+
+#summary-table .balance {
+    white-space: nowrap;
 }

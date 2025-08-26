@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -7,71 +8,100 @@
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <header>
-        <h1>割り勘計算機</h1>
+    <header class="main-header">
+        <h1 class="main-header__title">割り勘計算機</h1>
     </header>
-    <main>
-        <section id="pricing-section">
-            <h2>チケット料金</h2>
+    <main class="main-content">
+        <section id="pricing-section" class="content-section">
+            <h2 class="content-section__title">チケット料金</h2>
             <div class="table-container" id="pricing-table-container">
-                <!-- Pricing table will be loaded here by JavaScript -->
+                <!-- Pricing table will be loaded here -->
             </div>
         </section>
 
-        <section id="calculation-section">
-            <h2>チケット</h2>
-            <div id="participants-list" class="participant-checklist">
-                <!-- Participants will be loaded here by JavaScript -->
-            </div>
-            <button class="add-participant-global-btn">参加者を追加</button>
-            <p>合計人数: <span class="participant-count" data-section="ticket">0</span></p>
+        <section id="calculation-section" class="content-section">
+            <h2 class="content-section__title">チケット</h2>
+            <div id="participants-list" class="participant-checklist"></div>
+            <button class="btn add-participant-global-btn">参加者を追加</button>
+            <p class="section-summary">合計人数: <span class="participant-count" data-section="ticket">0</span></p>
             <div class="table-container" id="calculation-table-container">
-                <!-- Calculation table will be loaded here by JavaScript -->
+                <!-- Calculation table will be loaded here -->
             </div>
         </section>
 
-        <section id="beer-server-section">
-            <h2>ビアサーバー</h2>
-            <div id="beer-server-participants-list" class="participant-checklist">
-                <!-- Beer server participants will be loaded here by JavaScript -->
-            </div>
-            <button class="add-participant-global-btn">参加者を追加</button>
-            <p>合計人数: <span class="participant-count" data-section="beer-server">0</span></p>
+        <section id="beer-server-section" class="content-section">
+            <h2 class="content-section__title">ビアサーバー</h2>
+            <div id="beer-server-participants-list" class="participant-checklist"></div>
+            <button class="btn add-participant-global-btn">参加者を追加</button>
+            <p class="section-summary">合計人数: <span class="participant-count" data-section="beer-server">0</span></p>
             <div class="table-container" id="beer-server-table-container">
-                <!-- Beer server table will be loaded here by JavaScript -->
+                <!-- Beer server table will be loaded here -->
             </div>
         </section>
 
-        <section id="food-section">
-            <h2>食材</h2>
-            <div id="food-participants-list" class="participant-checklist">
-                <!-- Food participants will be loaded here by JavaScript -->
-            </div>
-            <button class="add-participant-global-btn">参加者を追加</button>
-            <p>合計人数: <span class="participant-count" data-section="food">0</span></p>
+        <section id="food-section" class="content-section">
+            <h2 class="content-section__title">食材</h2>
+            <div id="food-participants-list" class="participant-checklist"></div>
+            <button class="btn add-participant-global-btn">参加者を追加</button>
+            <p class="section-summary">合計人数: <span class="participant-count" data-section="food">0</span></p>
             <div class="table-container" id="food-table-container">
-                <!-- Food table will be loaded here by JavaScript -->
+                <!-- Food table will be loaded here -->
             </div>
         </section>
 
         <div id="dynamic-sections-container"></div>
-        <button id="add-new-table-section-btn">新しいテーブルを追加</button>
+        <button id="add-new-table-section-btn" class="btn btn--add-section">新しいテーブルを追加</button>
 
-        <section id="summary-section">
-            <h2>総合収支</h2>
+        <section id="summary-section" class="content-section">
+            <h2 class="content-section__title">総合収支</h2>
             <div class="table-container">
-                <table id="summary-table">
-                    <thead>
-                        <!-- Headers will be loaded here by JavaScript -->
-                    </thead>
-                    <tbody>
-                        <!-- Summary will be loaded here by JavaScript -->
-                    </tbody>
+                <table id="summary-table" class="data-table">
+                    <thead></thead>
+                    <tbody></tbody>
                 </table>
             </div>
         </section>
     </main>
 
-    <script src="script.js?v=16"></script>
+    <!-- Templates -->
+    <template id="participant-template">
+        <label class="participant-checklist__label">
+            <input type="checkbox" class="participant-checklist__checkbox">
+            <span class="participant-checklist__name"></span>
+        </label>
+    </template>
+
+    <template id="calculation-row-template">
+        <tr class="calculation-table__header-row">
+            <th></th><th>テント券</th><th>駐車券</th><th>手数料</th>
+        </tr>
+        <tr class="calculation-table__sub-header">
+            <th></th>
+            <td><input type="number" class="form-input form-input--numeric ticket-quantity-input" data-ticket-type="テント券" value="0"></td>
+            <td><input type="number" class="form-input form-input--numeric ticket-quantity-input" data-ticket-type="駐車券" value="0"></td>
+            <td><input type="number" class="form-input form-input--numeric fee-input" value="0"></td>
+        </tr>
+        <tr class="calculation-table__label-row">
+            <th></th><td>支払合計</td><td>一人当たり</td><td>払う/貰う</td>
+        </tr>
+        <tr class="calculation-table__value-row">
+            <th></th>
+            <td class="total-payment">0</td>
+            <td class="per-person-payment">0</td>
+            <td class="balance">0</td>
+        </tr>
+    </template>
+
+    <template id="standard-row-template">
+        <tr>
+            <td></td>
+            <td><input type="number" class="form-input form-input--numeric" value="0"></td>
+            <td class="total-payment">0</td>
+            <td class="per-person-payment">0</td>
+            <td class="balance">0</td>
+        </tr>
+    </template>
+
+    <script type="module" src="js/main.js?v=18"></script>
 </body>
 </html>

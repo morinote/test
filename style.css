@@ -169,9 +169,13 @@ body {
     }
 }
 
-.table-container--wrap .data-table {
+.table-container--wrap #summary-table {
     table-layout: fixed;
     word-break: break-all;
+}
+
+.table-container--wrap #summary-table .balance {
+    white-space: normal;
 }
 
 input[type="number"]::-webkit-outer-spin-button,

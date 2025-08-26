@@ -163,21 +163,15 @@ body {
     border-bottom: none;
 }
 
-.form-input {
-    padding: 10px;
-    box-sizing: border-box;
-    background-color: #f5f6f7;
-    color: var(--text-color-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    width: 100%;
-    font-size: 14px;
+    .form-input {
+        padding: 8px;
+        font-size: 13px;
+    }
 }
 
-.form-input:focus {
-    border-color: var(--primary-color);
-    background-color: var(--surface-color);
-    outline: none;
+.table-container--wrap .data-table {
+    table-layout: fixed;
+    word-break: break-all;
 }
 
 input[type="number"]::-webkit-outer-spin-button,

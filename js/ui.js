@@ -480,4 +480,19 @@ export function setupEventListeners() {
             }
         }
     }, true);
+
+    // Toggle summary table view
+    const toggleBtn = document.getElementById('toggle-summary-view-btn');
+    const summaryTableContainer = document.getElementById('summary-table-container');
+
+    if (toggleBtn && summaryTableContainer) {
+        toggleBtn.addEventListener('click', () => {
+            summaryTableContainer.classList.toggle('table-container--wrap');
+            if (summaryTableContainer.classList.contains('table-container--wrap')) {
+                toggleBtn.textContent = 'スクロール表示に切り替え';
+            } else {
+                toggleBtn.textContent = '折り返し表示に切り替え';
+            }
+        });
+    }
 }
